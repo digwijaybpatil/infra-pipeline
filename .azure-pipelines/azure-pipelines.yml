@@ -13,8 +13,12 @@ steps:
   displayName: Terraform validate
   workingDirectory: $(System.DefaultWorkingDirectory)/todo-infra
 
-- script: terraform plan
+- script: terraform plan -out=tfplan
   displayName: Terraform plan
+  workingDirectory: $(System.DefaultWorkingDirectory)/todo-infra
+
+- script: terraform apply --auto-approve tfplan
+  displayName: Terraform apply
   workingDirectory: $(System.DefaultWorkingDirectory)/todo-infra
 
 

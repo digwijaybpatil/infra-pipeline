@@ -1,6 +1,6 @@
-# rgs = {
-#     rg1 = {
-#         name     = "rg-dev"
-#         location = "central india"
-#     }
-# }
+rgs = {
+    rg1 = {
+        name     = "rg-dev"
+        location = "central india"
+    }
+}

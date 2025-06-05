@@ -34,14 +34,15 @@ jobs:
           command: 'validate'
           workingDirectory: '$(System.DefaultWorkingDirectory)/todo-infra'
 
-      - task: TerraformTask@5
+      - task: AzureCLI@2
+        displayName: Terraform Plan (via WIF)
         inputs:
-          provider: 'azurerm'
-          command: 'plan'
-          commandOptions: '-var-file=${{ parameters.tfvarspath }}'
+          azureSubscription: 'WIF-ServiceConnection'
+          scriptType: 'ps'
+          scriptLocation: 'inlineScript'
           workingDirectory: '$(System.DefaultWorkingDirectory)/todo-infra'
-          environmentServiceNameAzureRM: 'WIF-ServiceConnection'
-          environmentAzureRmOverrideSubscriptionID: 'ab1ac19d-06cd-4ac2-b289-cbb67e904a92'
+          inlineScript: |
+            terraform plan -var-file="${{ parameters.tfvarspath }}"
 
   - job: ManualApproval${{parameters.environment}}
     displayName: "${{ parameters.environment }} - Manual Approval"
@@ -80,12 +81,13 @@ jobs:
               -backend-config="subscription_id=ab1ac19d-06cd-4ac2-b289-cbb67e904a92" `
               -backend-config="use_azuread_auth=true"
 
-      - task: TerraformTask@5
+      - task: AzureCLI@2
+        displayName: Terraform Apply (via WIF)
         inputs:
-          provider: 'azurerm'
-          command: 'apply'
-          commandOptions: '-auto-approve -var-file=${{ parameters.tfvarspath }}'
+          azureSubscription: 'WIF-ServiceConnection'
+          scriptType: 'ps'
+          scriptLocation: 'inlineScript'
           workingDirectory: '$(System.DefaultWorkingDirectory)/todo-infra'
-          environmentServiceNameAzureRM: 'WIF-ServiceConnection'
-          environmentAzureRmOverrideSubscriptionID: 'ab1ac19d-06cd-4ac2-b289-cbb67e904a92'
+          inlineScript: |
+            terraform apply -auto-approve -var-file="${{ parameters.tfvarspath }}"
           

@@ -33,7 +33,7 @@ jobs:
         inputs:
           provider: 'azurerm'
           command: 'plan'
-          commandOptions: '-var-file = ${{ parameters.tfvarsPath }}'
+          commandOptions: '-var-file=${{ parameters.tfvarsPath }}'
           workingDirectory: '$(System.DefaultWorkingDirectory)/todo-infra'
           environmentServiceNameAzureRM: 'WIF-ServiceConnection'
           environmentAzureRmOverrideSubscriptionID: 'ab1ac19d-06cd-4ac2-b289-cbb67e904a92'

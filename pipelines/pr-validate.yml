@@ -1,0 +1,25 @@
+trigger: none
+
+pr:
+  branches:
+    include:
+      - main
+
+stages:
+  - stage: PlanAndValidateDev
+    displayName: "Dev- Terraform Plan and Validate on PR"
+    jobs:
+      - template: templates/deploy-template.yml
+        parameters:
+          environment: 'dev'
+          tfvarspath: 'todo-infra/environments/dev/dev.tfvars'
+          runApply: false # Do not apply changes on PRs
+
+  - stage: PlanAndValidateProd
+    displayName: "Prod - Terraform Plan and Validate on PR"
+    jobs:
+      - template: templates/deploy-template.yml
+        parameters:
+          environment: 'prod'
+          tfvarspath: 'todo-infra/environments/prod/prod.tfvars'
+          runApply: false # Do not apply changes on PRs

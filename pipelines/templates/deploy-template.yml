@@ -1,0 +1,68 @@
+parameters:
+  - name: environment
+    type: string
+  - name: tfvarspath
+    type: string
+  - name: runApply
+    type: boolean
+    default: false
+
+jobs: 
+  - job: PreDeploy_${{parameters.environment}}
+    displayName: "${{ parameters.environment }} - Terraform Plan and Validate"
+    pool: digwi-pool
+    steps:
+      - task: TerraformTask@5
+        inputs:
+          provider: 'azurerm'
+          command: 'init'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/todo-infra'
+          backendServiceArm: 'devops-sp-connection'
+          backendAzureRmOverrideSubscriptionID: 'ab1ac19d-06cd-4ac2-b289-cbb67e904a92'
+          backendAzureRmResourceGroupName: 'rg-tfstate'
+          backendAzureRmStorageAccountName: 'digwitfstatestorage'
+          backendAzureRmContainerName: 'tfstate'
+          backendAzureRmKey: '${{ parameters.environment }}.tfstate'
+
+      - task: TerraformTask@5
+        inputs:
+          provider: 'azurerm'
+          command: 'validate'
+
+      - task: TerraformTask@5
+        inputs:
+          provider: 'azurerm'
+          command: 'plan'
+          commandOptions: '-var-file = ${{ parameters.tfvarsPath }}'
+          environmentServiceNameAzureRM: 'devops-sp-connection'
+          environmentAzureRmOverrideSubscriptionID: 'ab1ac19d-06cd-4ac2-b289-cbb67e904a92'
+
+  - job: ManualApproval${{parameters.environment}}
+    displayName: "${{ parameters.environment }} - Manual Approval"
+    dependsOn: PreDeploy_${{parameters.environment}}
+    pool: server
+    condition: succeeded()
+    timeoutInMinutes: 4320 # job times out in 3 days
+    steps:
+    - task: ManualValidation@1
+      timeoutInMinutes: 1440 # task times out in 1 day
+      inputs:
+        notifyUsers: |
+          digwijayp@gmail.com          
+        instructions: 'Please validate the build configuration and resume'
+        
+              
+  - job: Deploy_${{parameters.environment}}
+    displayName: "${{ parameters.environment }} - Terraform Apply"
+    dependsOn: ManualApproval${{parameters.environment}}
+    pool: digwi-pool
+    condition: succeeded()
+    steps:
+      - task: TerraformTask@5
+        inputs:
+          provider: 'azurerm'
+          command: 'apply'
+          commandOptions: '-auto-approve -var-file=${{ parameters.tfvarsPath }}'
+          environmentServiceNameAzureRM: 'devops-sp-connection'
+          environmentAzureRmOverrideSubscriptionID: 'ab1ac19d-06cd-4ac2-b289-cbb67e904a92'
+          enabled: ${{ parameters.runApply }}

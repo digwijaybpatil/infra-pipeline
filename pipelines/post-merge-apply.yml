@@ -10,7 +10,7 @@ stages:
       - template: templates/deploy-template.yml
         parameters:
           environment: 'dev'
-          tfvarspath: 'todo-infra/environments/dev/dev.tfvars'
+          tfvarspath: 'environments/dev/dev.tfvars'
           runApply: true # Apply changes on merge to main
 
   - stage: ProdDeploy
@@ -19,5 +19,5 @@ stages:
       - template: templates/deploy-template.yml
         parameters:
           environment: 'prod'
-          tfvarspath: 'todo-infra/environments/prod/prod.tfvars'
+          tfvarspath: 'environments/prod/prod.tfvars'
           runApply: true # Apply changes on merge to main

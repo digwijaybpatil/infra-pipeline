@@ -12,30 +12,37 @@ jobs:
     displayName: "${{ parameters.environment }} - Terraform Plan and Validate"
     pool: digwi-pool
     steps:
-      - task: TerraformTask@5
+      - task: AzureCLI@2
+        displayName: Terraform Init via WIF
         inputs:
-          provider: 'azurerm'
-          command: 'init'
+          azureSubscription: 'WIF-ServiceConnection'
+          scriptType: 'ps'  # ✅ <-- switch from 'bash' to 'ps'
+          scriptLocation: 'inlineScript'
           workingDirectory: '$(System.DefaultWorkingDirectory)/todo-infra'
-          backendServiceArm: 'devops-sp-connection'
-          backendAzureRmOverrideSubscriptionID: 'ab1ac19d-06cd-4ac2-b289-cbb67e904a92'
-          backendAzureRmResourceGroupName: 'rg-tfstate'
-          backendAzureRmStorageAccountName: 'digwitfstatestorage'
-          backendAzureRmContainerName: 'tfstate'
-          backendAzureRmKey: '${{ parameters.environment }}.tfstate'
+          inlineScript: |
+            terraform init `
+              -backend-config="storage_account_name=digwitfstatestorage" `
+              -backend-config="container_name=tfstate" `
+              -backend-config="key=${{ parameters.environment }}.tfstate" `
+              -backend-config="resource_group_name=rg-tfstate" `
+              -backend-config="subscription_id=ab1ac19d-06cd-4ac2-b289-cbb67e904a92" `
+              -backend-config="use_azuread_auth=true"
 
       - task: TerraformTask@5
         inputs:
           provider: 'azurerm'
           command: 'validate'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/todo-infra'
 
-      - task: TerraformTask@5
+      - task: AzureCLI@2
+        displayName: Terraform Plan (via WIF)
         inputs:
-          provider: 'azurerm'
-          command: 'plan'
-          commandOptions: '-var-file = ${{ parameters.tfvarsPath }}'
-          environmentServiceNameAzureRM: 'devops-sp-connection'
-          environmentAzureRmOverrideSubscriptionID: 'ab1ac19d-06cd-4ac2-b289-cbb67e904a92'
+          azureSubscription: 'WIF-ServiceConnection'
+          scriptType: 'ps'
+          scriptLocation: 'inlineScript'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/todo-infra'
+          inlineScript: |
+            terraform plan -var-file="${{ parameters.tfvarspath }}"
 
   - job: ManualApproval${{parameters.environment}}
     displayName: "${{ parameters.environment }} - Manual Approval"
@@ -56,13 +63,31 @@ jobs:
     displayName: "${{ parameters.environment }} - Terraform Apply"
     dependsOn: ManualApproval${{parameters.environment}}
     pool: digwi-pool
-    condition: succeeded()
+    condition: and(succeeded(), eq('${{ parameters.runApply }}', 'true'))
     steps:
-      - task: TerraformTask@5
+      - task: AzureCLI@2
+        displayName: Terraform Init via WIF
         inputs:
-          provider: 'azurerm'
-          command: 'apply'
-          commandOptions: '-auto-approve -var-file=${{ parameters.tfvarsPath }}'
-          environmentServiceNameAzureRM: 'devops-sp-connection'
-          environmentAzureRmOverrideSubscriptionID: 'ab1ac19d-06cd-4ac2-b289-cbb67e904a92'
-          enabled: ${{ parameters.runApply }}
+          azureSubscription: 'WIF-ServiceConnection'
+          scriptType: 'ps'  # ✅ <-- switch from 'bash' to 'ps'
+          scriptLocation: 'inlineScript'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/todo-infra'
+          inlineScript: |
+            terraform init `
+              -backend-config="storage_account_name=digwitfstatestorage" `
+              -backend-config="container_name=tfstate" `
+              -backend-config="key=${{ parameters.environment }}.tfstate" `
+              -backend-config="resource_group_name=rg-tfstate" `
+              -backend-config="subscription_id=ab1ac19d-06cd-4ac2-b289-cbb67e904a92" `
+              -backend-config="use_azuread_auth=true"
+
+      - task: AzureCLI@2
+        displayName: Terraform Apply (via WIF)
+        inputs:
+          azureSubscription: 'WIF-ServiceConnection'
+          scriptType: 'ps'
+          scriptLocation: 'inlineScript'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/todo-infra'
+          inlineScript: |
+            terraform apply -auto-approve -var-file="${{ parameters.tfvarspath }}"
+          

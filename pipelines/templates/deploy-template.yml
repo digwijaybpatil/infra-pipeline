@@ -16,16 +16,16 @@ jobs:
         displayName: Terraform Init via WIF
         inputs:
           azureSubscription: 'WIF-ServiceConnection'
-          scriptType: 'bash'
+          scriptType: 'ps'  # ✅ <-- switch from 'bash' to 'ps'
           scriptLocation: 'inlineScript'
           workingDirectory: '$(System.DefaultWorkingDirectory)/todo-infra'
           inlineScript: |
-            terraform init \
-              -backend-config="storage_account_name=digwitfstatestorage" \
-              -backend-config="container_name=tfstate" \
-              -backend-config="key=${{ parameters.environment }}.tfstate" \
-              -backend-config="resource_group_name=rg-tfstate" \
-              -backend-config="subscription_id=ab1ac19d-06cd-4ac2-b289-cbb67e904a92" \
+            terraform init `
+              -backend-config="storage_account_name=digwitfstatestorage" `
+              -backend-config="container_name=tfstate" `
+              -backend-config="key=${{ parameters.environment }}.tfstate" `
+              -backend-config="resource_group_name=rg-tfstate" `
+              -backend-config="subscription_id=ab1ac19d-06cd-4ac2-b289-cbb67e904a92" `
               -backend-config="use_azuread_auth=true"
 
       - task: TerraformTask@5
@@ -68,16 +68,16 @@ jobs:
         displayName: Terraform Init via WIF
         inputs:
           azureSubscription: 'WIF-ServiceConnection'
-          scriptType: 'bash'
+          scriptType: 'ps'  # ✅ <-- switch from 'bash' to 'ps'
           scriptLocation: 'inlineScript'
           workingDirectory: '$(System.DefaultWorkingDirectory)/todo-infra'
           inlineScript: |
-            terraform init \
-              -backend-config="storage_account_name=digwitfstatestorage" \
-              -backend-config="container_name=tfstate" \
-              -backend-config="key=${{ parameters.environment }}.tfstate" \
-              -backend-config="resource_group_name=rg-tfstate" \
-              -backend-config="subscription_id=ab1ac19d-06cd-4ac2-b289-cbb67e904a92" \
+            terraform init `
+              -backend-config="storage_account_name=digwitfstatestorage" `
+              -backend-config="container_name=tfstate" `
+              -backend-config="key=${{ parameters.environment }}.tfstate" `
+              -backend-config="resource_group_name=rg-tfstate" `
+              -backend-config="subscription_id=ab1ac19d-06cd-4ac2-b289-cbb67e904a92" `
               -backend-config="use_azuread_auth=true"
 
       - task: TerraformTask@5

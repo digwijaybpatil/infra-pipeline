@@ -20,5 +20,5 @@ module "subnet_module" {
   subnet_name              = each.value.name
   resource_group_name      = module.rg_module[each.key].resource_group_name
   vnet_name                = module.vnet_module[each.key].vnet_name
-  address_prefixes         = each.value.address_prefixes
+  address_prefixes         = each.value.address_prefix
 }

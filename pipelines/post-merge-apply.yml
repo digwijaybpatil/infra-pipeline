@@ -4,14 +4,14 @@ trigger:
       - main
 
 stages:
-  - stage: DevDeploy
-    displayName: "Dev - Terraform Apply"
-    jobs:
-      - template: templates/deploy-template.yml
-        parameters:
-          environment: 'dev'
-          tfvarspath: 'environments/dev/dev.tfvars'
-          runApply: true # Apply changes on merge to main
+  # - stage: DevDeploy
+  #   displayName: "Dev - Terraform Apply"
+  #   jobs:
+  #     - template: templates/deploy-template.yml
+  #       parameters:
+  #         environment: 'dev'
+  #         tfvarspath: 'environments/dev/dev.tfvars'
+  #         runApply: true # Apply changes on merge to main
 
   - stage: ProdDeploy
     displayName: "Prod - Terraform Apply"

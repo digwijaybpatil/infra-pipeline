@@ -13,10 +13,10 @@ jobs:
     pool: digwi-pool
     steps:
       - task: AzureCLI@2
-        displayName: Terraform Init via WIF
+        displayName: Terraform Init
         inputs:
           azureSubscription: 'WIF-ServiceConnection'
-          scriptType: 'ps'  # ✅ <-- switch from 'bash' to 'ps'
+          scriptType: 'ps' 
           scriptLocation: 'inlineScript'
           workingDirectory: '$(System.DefaultWorkingDirectory)/todo-infra'
           inlineScript: |
@@ -35,7 +35,7 @@ jobs:
           workingDirectory: '$(System.DefaultWorkingDirectory)/todo-infra'
 
       - task: AzureCLI@2
-        displayName: Terraform Plan (via WIF)
+        displayName: Terraform Plan
         inputs:
           azureSubscription: 'WIF-ServiceConnection'
           scriptType: 'ps'
@@ -55,7 +55,7 @@ jobs:
       timeoutInMinutes: 1440 # task times out in 1 day
       inputs:
         notifyUsers: |
-          digwijayp@gmail.com          
+          laveneetbareja05@outlook.com          
         instructions: 'Please validate the build configuration and resume'
         
               
@@ -66,10 +66,10 @@ jobs:
     condition: and(succeeded(), eq('${{ parameters.runApply }}', 'true'))
     steps:
       - task: AzureCLI@2
-        displayName: Terraform Init via WIF
+        displayName: Terraform Init
         inputs:
           azureSubscription: 'WIF-ServiceConnection'
-          scriptType: 'ps'  # ✅ <-- switch from 'bash' to 'ps'
+          scriptType: 'ps' 
           scriptLocation: 'inlineScript'
           workingDirectory: '$(System.DefaultWorkingDirectory)/todo-infra'
           inlineScript: |
@@ -82,7 +82,7 @@ jobs:
               -backend-config="use_azuread_auth=true"
 
       - task: AzureCLI@2
-        displayName: Terraform Apply (via WIF)
+        displayName: Terraform Apply
         inputs:
           azureSubscription: 'WIF-ServiceConnection'
           scriptType: 'ps'

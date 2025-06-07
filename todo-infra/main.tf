@@ -47,4 +47,6 @@ module "vm_module" {
   image_sku = each.value.image_sku
   image_version = each.value.image_version
   disable_password_authentication = each.value.disable_password_authentication
+  nsg_name = each.value.nsg_name
+  nsg_location = module.rg_module[each.key].resource_group_location
 }

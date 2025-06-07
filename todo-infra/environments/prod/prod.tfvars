@@ -43,5 +43,6 @@ vms = {
     image_sku                   = "18.04-LTS"
     image_version               = "latest"
     disable_password_authentication = false
+    nsg_name                    = "nsg-prod"
   }
 }

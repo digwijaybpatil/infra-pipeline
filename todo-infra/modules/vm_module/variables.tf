@@ -19,5 +19,6 @@ variable "image_offer" {}
 variable "image_sku" {}
 variable "image_version" {}
 variable "disable_password_authentication" {}
-  
+variable "nsg_name" {}
+variable "nsg_location" {}  
 

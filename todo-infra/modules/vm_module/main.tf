@@ -47,3 +47,28 @@ resource "azurerm_linux_virtual_machine" "vm" {
     version   = var.image_version
   }
 }
+
+resource "azurerm_network_security_group" "prod-nsg" {
+  name                = var.nsg_name
+  location            = var.nsg_location
+  resource_group_name = var.resource_group_name
+
+  security_rule {
+    name                       = "SSH"
+    priority                   = 1001
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "22"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+
+  # Add more rules as needed
+}
+
+resource "azurerm_subnet_network_security_group_association" "subnet_nsg" {
+  subnet_id                 = var.subnet_id
+  network_security_group_id = azurerm_network_security_group.nsg.id
+}

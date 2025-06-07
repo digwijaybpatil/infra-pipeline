@@ -47,6 +47,7 @@ variable "vms" {
     image_sku                   = string
     image_version               = string
     disable_password_authentication = bool
+    nsg_name                    = string
   }))
 }
 

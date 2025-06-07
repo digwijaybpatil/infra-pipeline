@@ -16,7 +16,6 @@ vnets = {
 subnets = {
     resource1 = {
         name = "subnet-prod"
-        address_prefix = ["10.0.0.0/24"]
-        vnet_name = "vnet-prod"
+        address_prefix = ["10.0.0.0/24"]        
     }
 }

@@ -70,5 +70,5 @@ resource "azurerm_network_security_group" "prod-nsg" {
 
 resource "azurerm_subnet_network_security_group_association" "subnet_nsg" {
   subnet_id                 = var.subnet_id
-  network_security_group_id = azurerm_network_security_group.nsg.id
+  network_security_group_id = azurerm_network_security_group.prod-nsg.id
 }

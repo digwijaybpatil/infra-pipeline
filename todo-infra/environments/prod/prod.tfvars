@@ -48,12 +48,6 @@ vms = {
   }
 }
 
-keyvault = {
-  resource1 = {
-    key_vault_name = "digwi-keyvault"
-    key_vault_resource_group_name = "rg-keyvault"
-  }
-}
 
-# key_vault_name            = "digwi-keyvault"
-# key_vault_resource_group_name = "rg-keyvault"
+key_vault_name            = "digwi-keyvault"
+key_vault_resource_group_name = "rg-keyvault"

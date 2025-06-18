@@ -51,12 +51,8 @@ variable "vms" {
   }))
 }
 
-variable "key_vault" {
-  description = "values for the key vault name."
-  type = map(object({
-    key_vault_name = string
-    key_vault_resource_group_name = string
-  }))
+variable "key_vault_name" {}
+variable "key_vault_resource_group_name" {
+  description = "The name of the resource group where the Key Vault is located."
+  type        = string
 }
-
-

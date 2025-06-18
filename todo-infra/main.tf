@@ -24,9 +24,10 @@ module "subnet_module" {
 }
 
 data "azurerm_key_vault" "kv" {
-  for_each = var.key_vault
-  name = each.value.key_vault_name
-  resource_group_name = each.value.key_vault_resource_group_name
+  name = var.key_vault_name
+  # The Key Vault resource group name is provided through the variable
+  resource_group_name = var.key_vault_resource_group_name
+  # Ensure that the Key Vault exists in the specified resource group
 }
 
 data "azurerm_key_vault_secret" "admin_username" {

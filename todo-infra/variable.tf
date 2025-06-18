@@ -29,8 +29,8 @@ variable "vms" {
     vm_name                     = string
     #vm_location                 = string
     vm_size                     = string
-    admin_username              = string
-    admin_password              = string
+    # admin_username              = string
+    # admin_password              = string
     nic_name                    = string
    # nic_location                = string
    # resource_group_name         = string

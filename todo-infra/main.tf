@@ -23,6 +23,23 @@ module "subnet_module" {
   address_prefixes         = each.value.address_prefix
 }
 
+data "azurerm_key_vault" "kv" {
+  name = var.key_vault_name
+  # The Key Vault resource group name is provided through the variable
+  resource_group_name = var.key_vault_resource_group_name
+  # Ensure that the Key Vault exists in the specified resource group
+}
+
+data "azurerm_key_vault_secret" "admin_username" {
+  name = "admin-username"
+  key_vault_id = data.azurerm_key_vault.kv.id
+}
+
+data "azurerm_key_vault_secret" "admin_password" {
+  name = "admin-password"
+  key_vault_id = data.azurerm_key_vault.kv.id
+}
+
 module "vm_module" {
   source = "./modules/vm_module"
   for_each = var.vms
@@ -38,8 +55,10 @@ module "vm_module" {
   vm_name = each.value.vm_name
   vm_location = module.rg_module[each.key].resource_group_location
   vm_size = each.value.vm_size
-  admin_username = each.value.admin_username
-  admin_password = each.value.admin_password
+  admin_username = data.azurerm_key_vault_secret.admin_username.value
+  # admin_username = each.value.admin_username
+  # admin_password = each.value.admin_password
+  admin_password = data.azurerm_key_vault_secret.admin_password.value
   os_disk_caching = each.value.os_disk_caching
   os_disk_storage_account_type = each.value.os_disk_storage_account_type
   image_publisher = each.value.image_publisher

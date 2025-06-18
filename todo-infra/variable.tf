@@ -29,8 +29,8 @@ variable "vms" {
     vm_name                     = string
     #vm_location                 = string
     vm_size                     = string
-    admin_username              = string
-    admin_password              = string
+    # admin_username              = string
+    # admin_password              = string
     nic_name                    = string
    # nic_location                = string
    # resource_group_name         = string
@@ -51,3 +51,8 @@ variable "vms" {
   }))
 }
 
+variable "key_vault_name" {}
+variable "key_vault_resource_group_name" {
+  description = "The name of the resource group where the Key Vault is located."
+  type        = string
+}

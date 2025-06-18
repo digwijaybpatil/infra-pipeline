@@ -51,3 +51,12 @@ variable "vms" {
   }))
 }
 
+variable "key_vault" {
+  description = "values for the key vault name."
+  type = map(object({
+    key_vault_name = string
+    key_vault_resource_group_name = string
+  }))
+}
+
+

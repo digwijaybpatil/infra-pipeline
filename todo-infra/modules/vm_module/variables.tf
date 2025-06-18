@@ -10,8 +10,12 @@ variable "public_ip_allocation_method" {}
 variable "vm_name" {}
 variable "vm_location" {}
 variable "vm_size" {}
-variable "admin_username" {}
-variable "admin_password" {}
+variable "admin_username" {
+    sensitive = true
+}
+variable "admin_password" {
+    sensitive = true
+}
 variable "os_disk_caching" {}
 variable "os_disk_storage_account_type" {}
 variable "image_publisher" {}

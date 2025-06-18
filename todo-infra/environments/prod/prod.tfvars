@@ -25,8 +25,8 @@ vms = {
     vm_name                     = "vm-prod"
    # vm_location                 = "central india"
     vm_size                     = "Standard_B1s"
-    admin_username              = "admin-digwi"
-    admin_password              = "Admin-digwi6564#"
+    # admin_username              = "admin-digwi"
+    # admin_password              = "Admin-digwi6564#"
     nic_name                    = "vm-prod-nic"
     #nic_location                = "central india"
     #resource_group_name         = "rg-prod"
@@ -44,5 +44,16 @@ vms = {
     image_version               = "latest"
     disable_password_authentication = false
     nsg_name                    = "nsg-prod"
+   
   }
 }
+
+keyvault = {
+  resource1 = {
+    key_vault_name = "digwi-keyvault"
+    key_vault_resource_group_name = "rg-keyvault"
+  }
+}
+
+# key_vault_name            = "digwi-keyvault"
+# key_vault_resource_group_name = "rg-keyvault"
